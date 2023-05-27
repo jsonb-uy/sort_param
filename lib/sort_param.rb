@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
+require_relative "sort_param/definition"
+require_relative "sort_param/field"
+require_relative "sort_param/fields"
 require_relative "sort_param/version"
 
 module SortParam
   class Error < StandardError; end
-  # Your code goes here...
+
+  def self.define(options = {}, &block)
+    Definition.new.define(options, &block)
+  end
 end
