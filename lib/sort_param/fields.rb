@@ -1,6 +1,6 @@
 module SortParam
   class Fields
-    # include Enumerable
+    include Enumerable
 
     SORT_SYMBOL_DIRECTION = { "+" => :asc, "-" => :desc }.freeze
 
@@ -11,7 +11,8 @@ module SortParam
 
         fields = Fields.new
         sort_string.split(",").each do |sort_token|
-          field = sort_token_to_field(sort_token.strip)
+          sort_token.strip!
+          field = sort_token_to_field(sort_token)
           next if field.nil?
 
           fields << field
@@ -31,7 +32,8 @@ module SortParam
       def column_name(str)
         return str unless SORT_SYMBOL_DIRECTION[str[0]]
 
-        name = str.slice(1..-1).strip!
+        name = str.slice(1..-1)
+        name.strip!
         return nil if blank?(name)
         return name if nulls_order(name).nil?
 
@@ -62,7 +64,8 @@ module SortParam
         return true if str.nil?
 
         str = str.to_s
-        str.empty? || str.strip.empty?
+        str.strip!
+        str.empty?
       end
     end
 
@@ -78,9 +81,9 @@ module SortParam
       fields.map(&:to_h)
     end
 
-    # def each(&block)
-    #   fields.values.each(&block)
-    # end
+    def each(&block)
+      fields.values.each(&block)
+    end
 
     private
 
