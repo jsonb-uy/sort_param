@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "sort_param/definition"
+require_relative "sort_param/formatters/formatter"
+require_relative "sort_param/formatters/hash"
 require_relative "sort_param/field"
 require_relative "sort_param/fields"
+require_relative "sort_param/definition"
 require_relative "sort_param/version"
 
 module SortParam

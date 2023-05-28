@@ -19,18 +19,27 @@ module SortParam
       self
     end
 
-    def load!(sort_string, mode: :default)
+    def field_defaults(name)
+      return nil if @fields_hash[name].nil?
+
+      @fields_hash[name].dup
+    end
+
+    def load_param!(sort_string, mode: :default)
       fields = Fields.parse(sort_string)
       validate_fields!(fields)
 
-      return fields.to_sql if mode == :sql
-
-      fields.to_h
+      formatter = mode_formatter(mode)
+      formatter.new(self).format(*fields)
     end
 
     private
 
     attr_reader :fields_hash
+
+    def mode_formatter(mode)
+      Formatters::Hash
+    end
 
     def validate_fields!(fields)
       unknown_field = (fields.names - fields_hash.keys).first

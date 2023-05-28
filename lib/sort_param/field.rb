@@ -7,12 +7,5 @@ module SortParam
       @direction = direction
       @nulls = nulls
     end
-
-    def to_h
-      { name => { direction: direction, nulls: nulls } }
-    end
-
-    def to_sql
-    end
   end
 end

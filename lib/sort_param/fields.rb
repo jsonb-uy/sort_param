@@ -80,10 +80,6 @@ module SortParam
       fields[field.name] = field
     end
 
-    def to_h
-      fields.values.map(&:to_h).inject(&:merge!)
-    end
-
     def each(&block)
       fields.values.each(&block)
     end
