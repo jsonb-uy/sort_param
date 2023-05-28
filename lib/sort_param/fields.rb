@@ -55,9 +55,8 @@ module SortParam
 
         direction = sort_direction(token)
         nulls = nulls_order(token)
-        return Field.new(name, direction) if nulls.nil?
 
-        Field.new(name, direction, { nulls: nulls })
+        Field.new(name, direction, nulls)
       end
 
       def blank?(str)
@@ -73,12 +72,16 @@ module SortParam
       @fields = {}
     end
 
+    def names
+      fields.keys
+    end
+
     def <<(field)
       fields[field.name] = field
     end
 
     def to_h
-      fields.map(&:to_h)
+      fields.values.map(&:to_h).inject(&:merge!)
     end
 
     def each(&block)

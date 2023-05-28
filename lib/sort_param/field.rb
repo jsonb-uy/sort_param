@@ -1,11 +1,18 @@
 module SortParam
   class Field
-    attr_reader :name, :direction, :options
+    attr_reader :name, :direction, :nulls
 
-    def initialize(name, direction, options = {})
+    def initialize(name, direction, nulls)
       @name = name
       @direction = direction
-      @options = options
+      @nulls = nulls
+    end
+
+    def to_h
+      { name => { direction: direction, nulls: nulls } }
+    end
+
+    def to_sql
     end
   end
 end
