@@ -2,6 +2,8 @@
 
 require_relative "sort_param/formatters/formatter"
 require_relative "sort_param/formatters/hash"
+require_relative "sort_param/formatters/mysql"
+require_relative "sort_param/formatters/pg"
 require_relative "sort_param/field"
 require_relative "sort_param/fields"
 require_relative "sort_param/definition"

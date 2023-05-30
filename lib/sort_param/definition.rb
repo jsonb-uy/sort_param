@@ -29,17 +29,13 @@ module SortParam
       fields = Fields.parse(sort_string)
       validate_fields!(fields)
 
-      formatter = mode_formatter(mode)
+      formatter = Formatters::Formatter.for(mode)
       formatter.new(self).format(*fields)
     end
 
     private
 
     attr_reader :fields_hash
-
-    def mode_formatter(mode)
-      Formatters::Hash
-    end
 
     def validate_fields!(fields)
       unknown_field = (fields.names - fields_hash.keys).first
