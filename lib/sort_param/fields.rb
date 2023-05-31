@@ -30,14 +30,13 @@ module SortParam
       end
 
       def column_name(str)
-        return str unless SORT_SYMBOL_DIRECTION[str[0]]
-
-        name = str.slice(1..-1)
+        name = SORT_SYMBOL_DIRECTION[str[0]].nil? ? str : str.slice(1..-1)
         name.strip!
+
         return nil if blank?(name)
         return name if nulls_order(name).nil?
 
-        name.sub!(/(:nulls_last|:nulls_first)$/, "")
+        name.sub(/(:nulls_last|:nulls_first)$/, "")
       end
 
       def nulls_order(str)
