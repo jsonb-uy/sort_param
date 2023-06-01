@@ -1,6 +1,10 @@
 module SortParam
   class Definition
+    attr_reader :fields_hash
+
     def define(options = {}, &block)
+      raise ArgumentError.new("Missing block") unless block_given?
+
       @fields_hash = {}
 
       instance_eval(&block)
@@ -34,8 +38,6 @@ module SortParam
     end
 
     private
-
-    attr_reader :fields_hash
 
     def validate_fields!(fields)
       unknown_field = (fields.names - fields_hash.keys).first

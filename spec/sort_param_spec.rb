@@ -1,11 +1,20 @@
-# frozen_string_literal: true
-
 RSpec.describe SortParam do
-  it "has a version number" do
-    expect(SortParam::VERSION).not_to be nil
-  end
+  describe ".define" do
+    context "with column definition block" do
+      it "creates a Definition instance" do
+        definition = SortParam.define do
+          field :email
+          field :first_name
+        end
 
-  it "does something useful" do
-    expect(false).to eq(true)
+        expect(definition).to be_a(SortParam::Definition)
+      end
+    end
+
+    context "with no block given" do
+      it "raises an error" do
+        expect { SortParam.define }.to raise_error(ArgumentError)
+      end
+    end
   end
 end

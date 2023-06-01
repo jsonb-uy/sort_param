@@ -30,7 +30,7 @@ module SortParam
     def parse_and_build_fields(sort_string)
       sort_string.split(",").each do |sort_token|
         sort_token.strip!
-        field = Field.parse(sort_token)
+        field = Field.from_string(sort_token)
         next if field.nil?
 
         self << field

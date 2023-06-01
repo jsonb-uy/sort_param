@@ -11,8 +11,6 @@ require_relative "sort_param/definition"
 require_relative "sort_param/version"
 
 module SortParam
-  class Error < StandardError; end
-
   def self.define(options = {}, &block)
     Definition.new.define(options, &block)
   end

@@ -5,7 +5,7 @@ module SortParam
     class << self
       include Utilities
 
-      def parse(sort_string)
+      def from_string(sort_string)
         return nil if blank?(sort_string)
 
         name = column_name(sort_string)
