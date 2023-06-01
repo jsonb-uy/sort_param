@@ -26,7 +26,7 @@ module SortParam
     end
 
     def load_param!(sort_string, mode: :default)
-      fields = Fields.parse(sort_string)
+      fields = Fields.new(sort_string)
       validate_fields!(fields)
 
       formatter = Formatters::Formatter.for(mode)

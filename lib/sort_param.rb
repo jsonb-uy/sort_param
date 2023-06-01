@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative "sort_param/utilities"
 require_relative "sort_param/formatters/formatter"
 require_relative "sort_param/formatters/hash"
 require_relative "sort_param/formatters/mysql"
