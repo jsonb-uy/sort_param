@@ -12,7 +12,7 @@ module SortParam
         field_defaults = definition.field_defaults(field.name) || {}
         column_name = field_defaults[:column_name] || field.name
 
-        nulls = field.nulls || field_defaults[:nulls]
+        nulls = (field.nulls || field_defaults[:nulls]).to_s
         "#{column_name} #{field.direction}#{nulls_order(nulls)}"
       end
 
@@ -23,9 +23,10 @@ module SortParam
       end
 
       def nulls_order(nulls)
-        return " nulls first" if nulls == :first
+        return " nulls first" if nulls == "first"
+        return " nulls last" if nulls == "last"
 
-        " nulls last"
+        nil
       end
     end
   end
