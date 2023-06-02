@@ -2,10 +2,12 @@ module SortParam
   class Definition
     attr_reader :fields_hash
 
+    def initialize
+      @fields_hash = {}
+    end
+
     def define(options = {}, &block)
       raise ArgumentError.new("Missing block") unless block_given?
-
-      @fields_hash = {}
 
       instance_eval(&block)
     end
