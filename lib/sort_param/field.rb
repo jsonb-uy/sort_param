@@ -45,7 +45,7 @@ module SortParam
 
     attr_reader :name, :direction, :nulls
 
-    def initialize(name, direction, nulls)
+    def initialize(name, direction, nulls = nil)
       @name = name
       @direction = direction
       @nulls = nulls
