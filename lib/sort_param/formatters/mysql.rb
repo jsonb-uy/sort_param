@@ -3,12 +3,13 @@
 module SortParam
   module Formatters
     class MySQL < Formatter
-      def format(*fields)
-        return format_collection(fields) if fields.size > 1
+      private
 
-        field = fields[0]
-        return nil if field.nil?
+      def format_collection(fields)
+        fields.map { |field| format(field) }.join(", ")
+      end
 
+      def format_field(field)
         field_defaults = definition.field_defaults(field.name) || {}
         column_name = field_defaults[:column_name] || field.name
 
@@ -17,12 +18,6 @@ module SortParam
         return "#{column_name} #{field.direction}" if nulls_sort_order.nil?
 
         "#{nulls_sort_order}, #{column_name} #{field.direction}"
-      end
-
-      private
-
-      def format_collection(fields)
-        fields.map { |field| format(field) }.join(", ")
       end
 
       def nulls_order(column_name, nulls)

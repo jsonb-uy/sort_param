@@ -14,9 +14,26 @@ module SortParam
         @definition = definition
       end
 
+      def format(*fields)
+        return format_collection(fields) if fields.size > 1
+
+        field = fields[0]
+        return nil if field.nil?
+
+        format_field(field)
+      end
+
       private
 
       attr_reader :definition
+
+      def format_collection(fields)
+        raise NotImplementedError
+      end
+
+      def format_field(field)
+        raise NotImplementedError
+      end
     end
   end
 end

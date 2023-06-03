@@ -41,7 +41,7 @@ module SortParam
       unknown_field = (fields.names - fields_hash.keys).first
       return true if unknown_field.nil?
 
-      raise StandardError.new("Unsupported sort field: #{unknown_field}")
+      raise SortParam::UnsupportedSortField.new("Unsupported sort field: #{unknown_field}")
     end
   end
 end

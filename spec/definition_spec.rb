@@ -97,8 +97,8 @@ RSpec.describe SortParam::Definition do
 
       context "with :default mode" do
         it "returns the sort fields hash with the sort direction and default options" do
-          sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
-          sort_fields2 = "+users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
+          sort_fields1 = "-users.last_name:nulls_last,users.first_name,-users.email"
+          sort_fields2 = "users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
 
           expect(definition.load_param!(sort_fields1)).to eql(
             {
@@ -162,6 +162,29 @@ RSpec.describe SortParam::Definition do
             "users.last_name is not null, users.last_name asc, users.first_name is not null, users.first_name asc, users.email asc"
           )
         end
+      end
+    end
+
+    context "with non-whitelisted sort field" do
+      before do
+        definition.define do
+          field "users.first_name", nulls: :last
+          field "users.email"
+        end
+      end
+
+      it "raises an error" do
+        sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
+        sort_fields2 = "users.last_name"
+        sort_fields3 = "+users.first_name:nulls_first, +users.email"
+        sort_fields4 = "users.email"
+        sort_fields5 = "users.first_name"
+
+        expect { definition.load_param!(sort_fields1) }.to raise_error(SortParam::UnsupportedSortField)
+        expect { definition.load_param!(sort_fields2) }.to raise_error(SortParam::UnsupportedSortField)
+        expect { definition.load_param!(sort_fields3) }.not_to raise_error
+        expect { definition.load_param!(sort_fields4) }.not_to raise_error
+        expect { definition.load_param!(sort_fields5) }.not_to raise_error
       end
     end
   end
