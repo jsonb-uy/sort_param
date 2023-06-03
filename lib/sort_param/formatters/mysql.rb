@@ -13,9 +13,10 @@ module SortParam
         column_name = field_defaults[:column_name] || field.name
 
         nulls = (field.nulls || field_defaults[:nulls]).to_s
-        return "#{column_name} #{field.direction}" if nulls.nil?
+        nulls_sort_order = nulls_order(column_name, nulls)
+        return "#{column_name} #{field.direction}" if nulls_sort_order.nil?
 
-        "#{nulls_order(column_name, nulls)}, #{column_name} #{field.direction}"
+        "#{nulls_sort_order}, #{column_name} #{field.direction}"
       end
 
       private

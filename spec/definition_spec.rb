@@ -149,17 +149,17 @@ RSpec.describe SortParam::Definition do
         end
       end
 
-      xcontext "with :mysql mode" do
+      context "with :mysql mode" do
         it "returns correct `ORDER BY` SQL" do
           sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
           sort_fields2 = "+users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
 
           expect(definition.load_param!(sort_fields1, mode: :mysql)).to eql(
-            "users.last_name is null, users.last_name desc, users.first_name is null, users.first_name asc, , users.email desc"
+            "users.last_name is null, users.last_name desc, users.first_name is null, users.first_name asc, users.email desc"
           )
 
           expect(definition.load_param!(sort_fields2, mode: :mysql)).to eql(
-            "users.last_name asc nulls first, users.first_name asc nulls first, users.email asc"
+            "users.last_name is not null, users.last_name asc, users.first_name is not null, users.first_name asc, users.email asc"
           )
         end
       end
