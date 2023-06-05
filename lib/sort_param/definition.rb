@@ -70,7 +70,7 @@ module SortParam
     # @return [Hash, String, NilClass] Translated to SQL or Hash.
     #   Returns nil if there is no column to sort.
     #
-    def load!(sort_string, mode: :default)
+    def load!(sort_string, mode: :hash)
       fields = Fields.new(sort_string)
       validate_fields!(fields)
 
