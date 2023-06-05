@@ -3,12 +3,16 @@ module SortParam
     include Enumerable
     include Utilities
 
-    def initialize(sort_string)
+    def initialize(sort_string = nil)
       @fields = {}
 
       return if blank?(sort_string)
 
       parse_and_build_fields(sort_string)
+    end
+
+    def [](name)
+      fields[name]
     end
 
     def names
@@ -21,6 +25,10 @@ module SortParam
 
     def each(&block)
       fields.values.each(&block)
+    end
+
+    def empty?
+      names.empty?
     end
 
     private
