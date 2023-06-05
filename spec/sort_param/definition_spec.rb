@@ -50,6 +50,10 @@ RSpec.describe SortParam::Definition do
 
       expect(definition.fields_hash).to be_empty
     end
+
+    it "returns the same Field instance" do
+      expect(definition.field(:name)).to eql(definition)
+    end
   end
 
   describe "#field_defaults" do
