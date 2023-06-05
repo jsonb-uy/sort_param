@@ -52,8 +52,8 @@ module SortParam
     #
     # @param sort_string [String] Sort expression. Comma-separated sort fields.
     # @param mode [Symbol, NilClass] Translation format
-    #   * `:pg` for PostgreSQL ORDER BY SQL
-    #   * `:mysql` for MySQL ORDER BY SQL
+    #   * `:pg` for PostgreSQL ORDER BY SQL.
+    #   * `:mysql` for MySQL ORDER BY SQL.
     #   * `:hash`/nil for the default hash representation.
     #
     # @example Sort by first_name ASC and then by last_name DESC
