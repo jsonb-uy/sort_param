@@ -27,7 +27,7 @@ module SortParam
       @fields_hash[name].dup
     end
 
-    def load_param!(sort_string, mode: :default)
+    def load!(sort_string, mode: :default)
       fields = Fields.new(sort_string)
       validate_fields!(fields)
 

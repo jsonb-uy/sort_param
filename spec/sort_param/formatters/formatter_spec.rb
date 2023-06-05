@@ -29,7 +29,7 @@ RSpec.describe SortParam::Formatters::Formatter do
       end.to raise_error(NotImplementedError)
 
       expect do
-        abstract_formatter.format(SortParam::Field.new("name", :asc), 
+        abstract_formatter.format(SortParam::Field.new("name", :asc),
                                   SortParam::Field.new("id", :asc))
       end.to raise_error(NotImplementedError)
     end
