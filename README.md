@@ -90,6 +90,7 @@ sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
 => "first_name asc nulls last, last_name desc nulls first"
 ```
 <br/>
+
 ### Rails example
 
 ```ruby

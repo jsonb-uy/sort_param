@@ -13,7 +13,20 @@ require_relative "sort_param/version"
 module SortParam
   class UnsupportedSortField < StandardError; end
 
-  def self.define(options = {}, &block)
-    Definition.new.define(options, &block)
+  # Creates a new SortParam definition that whitelists the columns that are allowed to
+  # sorted (i.e. used in SQL ORDER BY).
+  #
+  # @param block [Proc] Field definition block
+  #
+  # @example
+  #  SortParam.define do
+  #    field :first_name
+  #    field :last_name, nulls: :last
+  #  end
+  #
+  # @return [Definition] Sort param definition
+  #
+  def self.define(&block)
+    Definition.new.define(&block)
   end
 end
