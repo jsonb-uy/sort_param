@@ -1,34 +1,133 @@
 # SortParam
 
-TODO: Delete this and the text below, and describe your gem
+Sort records using a query parameter based on JSON API's sorting format.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sort_param`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+
+* Supports `ORDER BY` expression generation for MySQL and PG.
+* Parse the sort string/expression into hash for any further processing.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'sort_param'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+And then execute:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```sh
+bundle install
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+Or install it yourself as:
+
+```sh
+gem install sort_param
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+### Basic
+
+
+#### 1. Whitelist/define the sort fields
+
+```ruby
+sort_param = SortParam.define do
+               field :first_name, nulls: :first
+               field :last_name
+             end
+```
+
+
+OR we can do:
+
+```ruby
+sort_param = SortParam::Definition.new
+                                  .field(:first_name, nulls: :first)
+                                  .field(:last_name)
+```
+
+`field` method accepts the column name as the first argument. Any default column configuration such as `:nulls`(for `NULLS FIRST` or `NULLS LAST` sort order) follows the name.
+
+#### 2. Parse sort fields from a parameter
+
+The `load!` method translates a given sort string/fields parameter to an SQL ORDER BY expression or to a Hash: 
+
+##### I. PostgreSQL example
+
+```ruby
+sort_param.load!("+first_name,-last_name", mode: :pg)
+
+=> "first_name asc nulls first, last_name desc"
+```
+
+##### II. MySQL example
+
+```ruby
+sort_param.load!("+first_name,-last_name", mode: :mysql)
+
+=> "first_name is not null, first_name asc, last_name desc"
+```
+
+##### III. Hash example
+
+```ruby
+sort_param.load!("+first_name,-last_name")
+
+=> {"first_name"=>{:nulls=>:first, :direction=>:asc}, "last_name"=>{:direction=>:desc}}
+```
+
+#### IV. Example with explicit nulls sort order
+
+###### Example in PG mode:
+
+```ruby
+sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
+
+=> "first_name asc nulls last, last_name desc nulls first"
+```
+<br/>
+### Rails example
+
+```ruby
+def index
+  users = User.all.order(order_by)
+end
+
+private
+
+def order_by
+  SortParam.define do
+    field :first_name
+    field :last_name, nulls: :first
+  end.load!(sort_param, mode: :pg)
+end
+
+# Fetch the sort fields from :sort query parameter.
+# If none is given, default sort by `first_name ASC` and `last_name ASC NULLS FIRST`.
+def sort_param
+  params[:sort].presence || "+first_name,+last_name"
+end
+```
+
+### Error
+
+| Class | Description |
+| ----------- | ----------- |
+| `SortParam::UnsupportedSortField` | Raised when a sort field from the parameter isn't included in the whitelisted sort fields. |
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sort_param.
+Bug reports and pull requests are welcome on GitHub at https://github.com/jsonb-uy/sort_param.
 
 ## License
 
