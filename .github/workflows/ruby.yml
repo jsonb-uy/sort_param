@@ -22,6 +22,8 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    env:
+      COVERAGE: true
     strategy:
       matrix:
         ruby-version: ['2.6', '2.7', '3.0']
