@@ -63,4 +63,17 @@ RSpec.describe SortParam::Fields do
       expect(with_sort_fields).not_to be_empty
     end
   end
+
+  describe "#each" do
+    it "iterates over the sort field instances" do
+      sort_fields = []
+
+      with_sort_fields.each do |field|
+        sort_fields << field
+      end
+
+      expect(sort_fields.size).to be(2)
+      expect(sort_fields.map(&:name)).to eql(%w[first_name last_name])
+    end
+  end
 end
