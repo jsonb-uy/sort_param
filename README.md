@@ -1,5 +1,7 @@
 # SortParam
 
+[![Gem Version](https://badge.fury.io/rb/sort_param.svg)](https://badge.fury.io/rb/sort_param) [![CI](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml) [![codecov](https://codecov.io/gh/jsonb-uy/sort_param/branch/main/graph/badge.svg?token=09RE3PZW4G)](https://codecov.io/gh/jsonb-uy/sort_param)
+
 Sort records using a query parameter based on JSON API's sorting format.
 
 ## Features
