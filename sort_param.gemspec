@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
   spec.files = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   spec.require_paths = ["lib"]
 
-  # spec.add_dependency 'oj'
-
   spec.bindir        = "bin"
   spec.executables   = []
 end
