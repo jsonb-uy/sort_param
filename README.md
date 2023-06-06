@@ -2,10 +2,26 @@
 
 [![Gem Version](https://badge.fury.io/rb/sort_param.svg)](https://badge.fury.io/rb/sort_param) [![CI](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml) [![codecov](https://codecov.io/gh/jsonb-uy/sort_param/branch/main/graph/badge.svg?token=09RE3PZW4G)](https://codecov.io/gh/jsonb-uy/sort_param)
 
-Sort records using a query parameter based on JSON API's sorting format.
+Sort records using a query parameter based on JSON API's sort parameter format.
+
+In a nutshell, this gem converts the parameter:
+```
+?sort=+users.first_name,-users.last_name:nulls_last,users.email
+```
+
+to this:
+```SQL
+users.first_name asc, users.last_name desc nulls last, users.email asc
+```
+
+or to this:
+```ruby
+{"users.first_name"=>{:direction=>:asc}, "users.last_name"=>{:direction=>:desc, :nulls=>:last}, "users.email"=>{:direction=>:asc}}
+```
 
 ## Features
 
+* Whitelisting of columns.
 * Supports `ORDER BY` expression generation for MySQL and PG.
 * Parse the sort string/expression into hash for any further processing.
 
@@ -82,6 +98,21 @@ sort_param.load!("+first_name,-last_name")
 => {"first_name"=>{:nulls=>:first, :direction=>:asc}, "last_name"=>{:direction=>:desc}}
 ```
 
+Any other additional column option set in `SortParam::Definition` or `SortParam.define` will be included in the column's hash value.
+For example:
+
+```ruby
+sort_param = SortParam.define do
+               field :first_name, foo: :bar, nulls: :first
+             end
+
+sort_param.load!("+first_name")
+=> {"first_name"=>{:foo=>:bar, :nulls=>:first, :direction=>:asc}}
+
+sort_param.load!("-first_name:nulls_last")
+=> {"first_name"=>{:foo=>:bar, :nulls=>:last, :direction=>:desc}}
+```
+
 #### IV. Example with explicit nulls sort order
 
 ###### Example in PG mode:
@@ -96,8 +127,8 @@ sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
 ### Rails example
 
 ```ruby
-def index
-  users = User.all.order(order_by)
+def index 
+  render json: User.all.order(order_by)
 end
 
 private
