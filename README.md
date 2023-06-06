@@ -1,6 +1,6 @@
 # SortParam
 
-[![Gem Version](https://badge.fury.io/rb/sort_param.svg)](https://badge.fury.io/rb/sort_param) [![CI](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml) [![codecov](https://codecov.io/gh/jsonb-uy/sort_param/branch/main/graph/badge.svg?token=09RE3PZW4G)](https://codecov.io/gh/jsonb-uy/sort_param)
+[![Gem Version](https://badge.fury.io/rb/sort_param.svg)](https://badge.fury.io/rb/sort_param) [![CI](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml/badge.svg?branch=main)](https://github.com/jsonb-uy/sort_param/actions/workflows/ruby.yml) [![codecov](https://codecov.io/gh/jsonb-uy/sort_param/branch/main/graph/badge.svg?token=09RE3PZW4G)](https://codecov.io/gh/jsonb-uy/sort_param) [![Maintainability](https://api.codeclimate.com/v1/badges/d1655f67377c21e9618a/maintainability)](https://codeclimate.com/github/jsonb-uy/sort_param/maintainability)
 
 Sort records using a query parameter based on JSON API's sort parameter format.
 
