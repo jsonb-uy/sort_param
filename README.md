@@ -4,10 +4,11 @@
 
 Sort records using a query parameter based on JSON API's sort parameter format.
 
-In a nutshell, this gem converts a comma-separated parameter value:
-```
-?sort=+users.first_name,-users.last_name:nulls_last,users.email
-```
+In a nutshell, this gem converts comma-separated sort fields:
+<pre>
+?sort=<b>+users.first_name,-users.last_name:nulls_last,users.email</b>
+</pre>
+
 
 to this:
 ```SQL
