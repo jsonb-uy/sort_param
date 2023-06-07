@@ -4,7 +4,7 @@
 
 Sort records using a query parameter based on JSON API's sort parameter format.
 
-In a nutshell, this gem converts comma-separated sort fields:
+In a nutshell, this gem converts comma-separated sort fields from this:
 <pre>
 ?sort=<b>+users.first_name,-users.last_name:nulls_last,users.email</b>
 </pre>
