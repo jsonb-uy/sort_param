@@ -22,9 +22,10 @@ or to this:
 
 ## Features
 
-* Whitelisting of columns.
+* Sort field whitelisting.
 * Supports `ORDER BY` expression generation for MySQL and PG.
-* Parse the sort string/expression into hash for any further processing.
+* Parsing of comma-separated sort fields into hash for any further processing.
+* Specifying `NULL` sort order.
 
 ## Installation
 
