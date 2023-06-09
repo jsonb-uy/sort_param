@@ -149,6 +149,40 @@ def sort_param
 end
 ```
 
+We can DRY this up a bit by creating a concern:
+
+#### controllers/concerns/has_sort_param.rb
+
+```ruby
+module HasSortParam
+  extend ActiveSupport::Concern
+
+  def sort_param(default: nil, &block)
+    raise ArgumentError.new('Missing block') unless block_given?
+
+    definition = SortParam.define(&block)
+    definition.load!(params[:sort].presence || default, mode: :pg)
+  end
+end
+```
+
+### controller
+
+```ruby
+def index 
+  render json: User.all.order(order_by)
+end
+
+private
+
+def order_by
+  sort_param default '+first_name,-last_name' do
+    field :first_name
+    field :last_name, nulls: :first
+  end
+end
+```
+
 ### Error
 
 | Class | Description |
