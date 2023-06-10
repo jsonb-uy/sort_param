@@ -176,7 +176,7 @@ end
 private
 
 def order_by
-  sort_param default '+first_name,-last_name' do
+  sort_param default: '+first_name,-last_name' do
     field :first_name
     field :last_name, nulls: :first
   end
