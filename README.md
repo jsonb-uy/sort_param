@@ -130,12 +130,12 @@ sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
 
 ```ruby
 def index 
-  render json: User.all.order(order_by)
+  render json: User.all.order(sort_fields)
 end
 
 private
 
-def order_by
+def sort_fields
   SortParam.define do
     field :first_name
     field :last_name, nulls: :first
@@ -170,12 +170,12 @@ end
 
 ```ruby
 def index 
-  render json: User.all.order(order_by)
+  render json: User.all.order(sort_fields)
 end
 
 private
 
-def order_by
+def sort_fields
   sort_param default: '+first_name,-last_name' do
     field :first_name
     field :last_name, nulls: :first
