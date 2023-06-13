@@ -1,3 +1,6 @@
 ## [0.1.0]
-
 - Initial release
+
+## [0.2.0]
+- Support setting a different field name in the formatted output
+
