@@ -93,7 +93,7 @@ RSpec.describe SortParam::Definition do
     context "with valid sort fields" do
       before do
         definition.define do
-          field "users.first_name", nulls: :last
+          field "first_name", nulls: :last, formatted_name: "users.first_name"
           field "users.last_name", nulls: "first"
           field "users.email"
         end
@@ -101,8 +101,8 @@ RSpec.describe SortParam::Definition do
 
       context "with :default mode" do
         it "returns the sort fields hash with the sort direction and default options" do
-          sort_fields1 = "-users.last_name:nulls_last,users.first_name,-users.email"
-          sort_fields2 = "users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
+          sort_fields1 = "-users.last_name:nulls_last,first_name,-users.email"
+          sort_fields2 = "users.last_name:nulls_first, +first_name:nulls_first, +users.email"
           sort_fields3 = "users.last_name:nulls_last"
 
           expect(definition.load!(sort_fields1)).to eql(
@@ -150,8 +150,8 @@ RSpec.describe SortParam::Definition do
 
       context "with :pg mode" do
         it "returns correct `ORDER BY` SQL" do
-          sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
-          sort_fields2 = "+users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
+          sort_fields1 = "-users.last_name:nulls_last,+first_name,-users.email"
+          sort_fields2 = "+users.last_name:nulls_first, +first_name:nulls_first, +users.email"
           sort_fields3 = "users.last_name:nulls_last"
 
           expect(definition.load!(sort_fields1, mode: :pg)).to eql(
@@ -168,8 +168,8 @@ RSpec.describe SortParam::Definition do
 
       context "with :mysql mode" do
         it "returns correct `ORDER BY` SQL" do
-          sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
-          sort_fields2 = "+users.last_name:nulls_first, +users.first_name:nulls_first, +users.email"
+          sort_fields1 = "-users.last_name:nulls_last,+first_name,-users.email"
+          sort_fields2 = "+users.last_name:nulls_first, +first_name:nulls_first, +users.email"
           sort_fields3 = "users.last_name:nulls_last"
 
           expect(definition.load!(sort_fields1, mode: :mysql)).to eql(

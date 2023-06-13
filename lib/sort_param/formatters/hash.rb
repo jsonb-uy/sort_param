@@ -6,16 +6,20 @@ module SortParam
       private
 
       def format_field(field)
-        field_data = definition.field_defaults(field.name) || {}
-        field_data.merge!(direction: field.direction)
-        field_data.merge!(nulls: field.nulls) unless field.nulls.nil?
-
-        { field.name => field_data }
+        { formatted_field_name(field) => field_data(field) }
       end
 
       def format_collection(fields)
         fields.map { |field| format(field) }
               .inject(&:merge!)
+      end
+
+      def field_data(field)
+        data = definition.field_defaults(field.name) || {}
+        data.merge!(direction: field.direction)
+        data.merge!(nulls: field.nulls) unless field.nulls.nil?
+        data.delete(:formatted_name)
+        data
       end
     end
   end

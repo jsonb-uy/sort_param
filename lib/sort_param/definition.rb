@@ -26,6 +26,7 @@ module SortParam
     # @param name [String, Symbol] column name
     # @param defaults [Hash] column default options:
     #   * nulls (Symbol) nulls sort order. `:last` or `:first`
+    #   * formatted_name (String) field name in formatted output
     #
     # @return [self] Definition instance
     def field(name, defaults = {})

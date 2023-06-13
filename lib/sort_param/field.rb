@@ -1,10 +1,10 @@
 module SortParam
   class Field
+    include Utilities
+
     SORT_SYMBOL_DIRECTION = { "+" => :asc, "-" => :desc }.freeze
 
     class << self
-      include Utilities
-
       def from_string(sort_string)
         return nil if blank?(sort_string)
 

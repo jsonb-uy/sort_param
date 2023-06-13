@@ -3,6 +3,8 @@
 module SortParam
   module Formatters
     class Formatter
+      include Utilities
+
       def self.for(mode)
         return Formatters::PG if mode == :pg
         return Formatters::MySQL if mode == :mysql
@@ -33,6 +35,12 @@ module SortParam
 
       def format_field(field)
         raise NotImplementedError
+      end
+
+      def formatted_field_name(field)
+        formatted_name = definition.field_defaults(field.name)[:formatted_name]
+
+        blank?(formatted_name) ? field.name : formatted_name
       end
     end
   end

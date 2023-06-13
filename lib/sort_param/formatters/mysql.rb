@@ -11,8 +11,8 @@ module SortParam
 
       def format_field(field)
         field_defaults = definition.field_defaults(field.name) || {}
-        column_name = field_defaults[:column_name] || field.name
 
+        column_name = formatted_field_name(field)
         nulls = (field.nulls || field_defaults[:nulls]).to_s
         nulls_sort_order = nulls_order(column_name, nulls)
         return "#{column_name} #{field.direction}" if nulls_sort_order.nil?
