@@ -126,6 +126,26 @@ sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
 ```
 <br/>
 
+### Render a different field name in the output
+Set the `:formatted_name` field option to output a different field name:
+
+```ruby
+  sort_param = SortParam.define do
+    field :first_name, formatted_name: 'users.name'
+  end
+  
+  sort_param.load!("+first_name", mode: :pg)
+  => "users.name asc"
+  
+  sort_param.load!("+first_name", mode: :mysql)
+  => "users.name asc"
+  
+  sort_param.load!("+first_name")
+  => {"users.name"=>{:direction=>:asc}}
+```
+
+<br/>
+
 ### Rails example
 
 ```ruby
