@@ -18,7 +18,7 @@ module SortParam
         data = definition.field_defaults(field.name) || {}
         data.merge!(direction: field.direction)
         data.merge!(nulls: field.nulls) unless field.nulls.nil?
-        data.delete(:formatted_name)
+        data.delete(:rename)
         data
       end
     end

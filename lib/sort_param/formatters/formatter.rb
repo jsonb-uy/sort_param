@@ -38,7 +38,7 @@ module SortParam
       end
 
       def formatted_field_name(field)
-        formatted_name = definition.field_defaults(field.name)[:formatted_name]
+        formatted_name = definition.field_defaults(field.name)[:rename]
 
         blank?(formatted_name) ? field.name : formatted_name
       end

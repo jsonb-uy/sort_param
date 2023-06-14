@@ -93,7 +93,7 @@ RSpec.describe SortParam::Definition do
     context "with valid sort fields" do
       before do
         definition.define do
-          field "first_name", nulls: :last, formatted_name: "users.first_name"
+          field "first_name", nulls: :last, rename: "users.first_name"
           field "users.last_name", nulls: "first"
           field "users.email"
         end
