@@ -6,3 +6,6 @@
 
 ## [1.0.0]
 - Rename :formatted_name option to :rename
+
+## [1.1.0]
+- Introduce definition#load to silently ignore non-whitelisted sort fields
