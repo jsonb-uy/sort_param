@@ -49,6 +49,20 @@ module SortParam
       @fields_hash[name].dup
     end
 
+    # Parse then translate a sort string expression and raise an error if the sort string includes
+    # a non-whitelisted sort field.
+    #
+    # @see #load
+    #
+    # @raise [SortParam::UnsupportedSortField] if :sort_string includes a non-whitelisted sort field.
+    #
+    def load!(sort_string, mode: :hash)
+      fields = Fields.new(sort_string)
+      validate_fields!(fields)
+
+      format_fields(mode, fields)
+    end
+
     # Parse then translate a sort string expression
     #
     # @param sort_string [String] Sort expression. Comma-separated sort fields.
@@ -71,18 +85,27 @@ module SortParam
     # @return [Hash, String, NilClass] Translated to SQL or Hash.
     #   Returns nil if there is no column to sort.
     #
-    def load!(sort_string, mode: :hash)
+    def load(sort_string, mode: :hash)
       fields = Fields.new(sort_string)
-      validate_fields!(fields)
+      fields = fields.reject { |field| non_whitelisted_fields(fields).include?(field.name) }
 
-      formatter = Formatters::Formatter.for(mode)
-      formatter.new(self).format(*fields)
+      format_fields(mode, fields)
     end
 
     private
 
-    def validate_fields!(fields)
-      unknown_field = (fields.names - fields_hash.keys).first
+    def format_fields(mode, fields)
+      Formatters::Formatter.for(mode)
+                           .new(self)
+                           .format(*fields)
+    end
+
+    def non_whitelisted_fields(loaded_fields)
+      loaded_fields.names - fields_hash.keys
+    end
+
+    def validate_fields!(loaded_fields)
+      unknown_field = non_whitelisted_fields(loaded_fields).first
       return true if unknown_field.nil?
 
       raise SortParam::UnsupportedSortField.new("Unsupported sort field: #{unknown_field}")

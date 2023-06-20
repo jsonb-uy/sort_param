@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Dir[File.expand_path("support/*.rb", __dir__)].sort.each { |f| require f }
+Dir[File.expand_path("sort_param/shared/**/*.rb", __dir__)].sort.each { |f| require f }
 
 if ENV.fetch("COVERAGE", nil) == "true"
   require "simplecov-cobertura"

@@ -67,121 +67,9 @@ RSpec.describe SortParam::Definition do
   end
 
   describe "#load!" do
-    context "with blank sort fields" do
-      context "with :default mode" do
-        it "returns nil" do
-          expect(definition.load!(nil)).to be_nil
-          expect(definition.load!(" ")).to be_nil
-        end
-      end
-
-      context "with :pg mode" do
-        it "returns nil" do
-          expect(definition.load!(nil, mode: :pg)).to be_nil
-          expect(definition.load!(" ", mode: :pg)).to be_nil
-        end
-      end
-
-      context "with :mysql mode" do
-        it "returns nil" do
-          expect(definition.load!(nil, mode: :mysql)).to be_nil
-          expect(definition.load!(" ", mode: :mysql)).to be_nil
-        end
-      end
-    end
-
-    context "with valid sort fields" do
-      before do
-        definition.define do
-          field "first_name", nulls: :last, rename: "users.first_name"
-          field "users.last_name", nulls: "first"
-          field "users.email"
-        end
-      end
-
-      context "with :default mode" do
-        it "returns the sort fields hash with the sort direction and default options" do
-          sort_fields1 = "-users.last_name:nulls_last,first_name,-users.email"
-          sort_fields2 = "users.last_name:nulls_first, +first_name:nulls_first, +users.email"
-          sort_fields3 = "users.last_name:nulls_last"
-
-          expect(definition.load!(sort_fields1)).to eql(
-            {
-              "users.last_name" => {
-                direction: :desc,
-                nulls: :last
-              },
-              "users.first_name" => {
-                direction: :asc,
-                nulls: :last
-              },
-              "users.email" => {
-                direction: :desc
-              }
-            }
-          )
-
-          expect(definition.load!(sort_fields2)).to eql(
-            {
-              "users.last_name" => {
-                direction: :asc,
-                nulls: :first
-              },
-              "users.first_name" => {
-                direction: :asc,
-                nulls: :first
-              },
-              "users.email" => {
-                direction: :asc
-              }
-            }
-          )
-
-          expect(definition.load!(sort_fields3)).to eql(
-            {
-              "users.last_name" => {
-                direction: :asc,
-                nulls: :last
-              }
-            }
-          )
-        end
-      end
-
-      context "with :pg mode" do
-        it "returns correct `ORDER BY` SQL" do
-          sort_fields1 = "-users.last_name:nulls_last,+first_name,-users.email"
-          sort_fields2 = "+users.last_name:nulls_first, +first_name:nulls_first, +users.email"
-          sort_fields3 = "users.last_name:nulls_last"
-
-          expect(definition.load!(sort_fields1, mode: :pg)).to eql(
-            "users.last_name desc nulls last, users.first_name asc nulls last, users.email desc"
-          )
-
-          expect(definition.load!(sort_fields2, mode: :pg)).to eql(
-            "users.last_name asc nulls first, users.first_name asc nulls first, users.email asc"
-          )
-
-          expect(definition.load!(sort_fields3, mode: :pg)).to eql("users.last_name asc nulls last")
-        end
-      end
-
-      context "with :mysql mode" do
-        it "returns correct `ORDER BY` SQL" do
-          sort_fields1 = "-users.last_name:nulls_last,+first_name,-users.email"
-          sort_fields2 = "+users.last_name:nulls_first, +first_name:nulls_first, +users.email"
-          sort_fields3 = "users.last_name:nulls_last"
-
-          expect(definition.load!(sort_fields1, mode: :mysql)).to eql(
-            "users.last_name is null, users.last_name desc, users.first_name is null, users.first_name asc, users.email desc"
-          )
-
-          expect(definition.load!(sort_fields2, mode: :mysql)).to eql(
-            "users.last_name is not null, users.last_name asc, users.first_name is not null, users.first_name asc, users.email asc"
-          )
-
-          expect(definition.load!(sort_fields3, mode: :mysql)).to eql("users.last_name is null, users.last_name asc")
-        end
+    it_behaves_like "sort string loader" do
+      def load_sort_string(sort_string, mode: :hash)
+        definition.load!(sort_string, mode: mode)
       end
     end
 
@@ -205,6 +93,40 @@ RSpec.describe SortParam::Definition do
         expect { definition.load!(sort_fields3) }.not_to raise_error
         expect { definition.load!(sort_fields4) }.not_to raise_error
         expect { definition.load!(sort_fields5) }.not_to raise_error
+      end
+    end
+  end
+
+  describe "#load" do
+    it_behaves_like "sort string loader" do
+      def load_sort_string(sort_string, mode: :hash)
+        definition.load(sort_string, mode: mode)
+      end
+    end
+
+    context "with non-whitelisted sort field" do
+      before do
+        definition.define do
+          field "users.first_name", nulls: :last
+          field "users.email"
+        end
+      end
+
+      it "ignores the non-whitelisted fields" do
+        sort_fields1 = "-users.last_name:nulls_last,+users.first_name,-users.email"
+        sort_fields2 = "users.last_name"
+        sort_fields3 = "+users.first_name:nulls_first, +users.email"
+        sort_fields4 = "users.email"
+        sort_fields5 = "users.first_name"
+
+        expect { definition.load(sort_fields1) }.not_to raise_error
+        expect { definition.load(sort_fields2) }.not_to raise_error
+        expect { definition.load(sort_fields3) }.not_to raise_error
+        expect { definition.load(sort_fields4) }.not_to raise_error
+        expect { definition.load(sort_fields5) }.not_to raise_error
+
+        expect(definition.load(sort_fields1).keys).to eql(%w[users.first_name users.email])
+        expect(definition.load(sort_fields2)).to be_nil
       end
     end
   end

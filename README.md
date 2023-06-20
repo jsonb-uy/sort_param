@@ -124,7 +124,18 @@ sort_param.load!("+first_name:nulls_last,-last_name:nulls_first", mode: :pg)
 
 => "first_name asc nulls last, last_name desc nulls first"
 ```
-<br/>
+
+### Ignoring non-whitelisted sort fields instead of raising error
+Use `#load` method instead:
+
+```ruby
+  sort_param = SortParam.define do
+    field :first_name
+  end
+
+  sort_param.load("+first_name,+last_name", mode: :pg)
+  => "first_name asc"
+```
 
 ### Render a different field name in the output
 Set the `:rename` field option to output a different field name:
@@ -207,7 +218,7 @@ end
 
 | Class | Description |
 | ----------- | ----------- |
-| `SortParam::UnsupportedSortField` | Raised when a sort field from the parameter isn't included in the whitelisted sort fields. |
+| `SortParam::UnsupportedSortField` | Raised when loading sort string via `#load!` and a sort field from the parameter isn't included in the whitelisted sort fields. |
 
 ## Development
 
