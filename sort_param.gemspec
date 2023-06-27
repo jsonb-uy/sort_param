@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ['Uy Jayson B']
   spec.email = ["uy.json.dev@gmail.com"]
 
-  spec.summary = "Sort records using a sort query parameter à la JSON-API style"
-  spec.description = "Sort records using a sort query parameter à la JSON-API style"
+  spec.summary = "Sort records using a sort query parameter à la JSON:API format"
+  spec.description = "Sort records using a sort query parameter à la JSON:API format"
   spec.homepage = "https://github.com/jsonb-uy/sort_param"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.3.0"
