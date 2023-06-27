@@ -137,12 +137,13 @@ Use `#load` method instead:
   => "first_name asc"
 ```
 
-### Render a different field name in the output
-Set the `:rename` field option to output a different field name:
+### Output a different field name
+Set the `:rename` field option to a string value or a Proc to output a different field name.
 
 ```ruby
   sort_param = SortParam.define do
     field :first_name, rename: 'users.name'
+    field :last_name, rename: ->(col) { "users.#{col}" }
   end
   
   sort_param.load!("+first_name", mode: :pg)
@@ -153,11 +154,27 @@ Set the `:rename` field option to output a different field name:
   
   sort_param.load!("+first_name")
   => {"users.name"=>{:direction=>:asc}}
+
+  sort_param.load!("+last_name")
+  => {"users.last_name"=>{:direction=>:asc}}
 ```
 
-<br/>
+### Whitelisting multiple fields with the same options at once
+Use `#fields` instead of `#field`:
+
+```ruby
+  sort_param = SortParam.define do
+    fields :first_name, :last_name, nulls: :first, rename: ->(col) { "users.#{col}" }
+    field :email
+  end
+```
+
+NOTE: Unlike `#field`, `#fields` can only accept a Proc for the `:rename` option.
+
 
 ### Rails example
+
+### controller
 
 ```ruby
 def index 
@@ -197,7 +214,7 @@ module HasSortParam
 end
 ```
 
-### controller
+### controller v2
 
 ```ruby
 def index 
