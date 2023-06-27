@@ -21,7 +21,7 @@ module SortParam
       self
     end
 
-    # Add a whitelisted column
+    # Whitelist a column
     #
     # @param name [String, Symbol] column name
     # @param defaults [Hash] column default options:
@@ -36,6 +36,25 @@ module SortParam
       return if name.strip.empty?
 
       fields_hash[name] = preprocess_field_defaults(name, defaults)
+
+      self
+    end
+
+    # Whitelist multiple columns with the same column defaults.
+    #
+    # @param name [Array<String, Symbol>] list of column names
+    # @param defaults [Hash] column default options
+    #
+    # @see #field
+    #
+    # @return [self] Definition instance
+    #
+    def fields(*names, **defaults)
+      if defaults[:rename] && !defaults[:rename].is_a?(Proc)
+        raise ArgumentError.new(":rename should be a Proc")
+      end
+
+      names.each { |name| field(name, **defaults) }
 
       self
     end
