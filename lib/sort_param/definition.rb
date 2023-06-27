@@ -25,15 +25,17 @@ module SortParam
     #
     # @param name [String, Symbol] column name
     # @param defaults [Hash] column default options:
-    #   * nulls (Symbol) nulls sort order. `:last` or `:first`
-    #   * rename (String) field name in formatted output
+    #   * nulls [Symbol] nulls sort order. `:last` or `:first`
+    #   * rename [String, Proc] rename field in the formatted output.
+    #     This can be a Proc code block that receives the :name as argument and
+    #     returns a transformed field name.
     #
     # @return [self] Definition instance
-    def field(name, defaults = {})
+    def field(name, **defaults)
       name = name.to_s
       return if name.strip.empty?
 
-      fields_hash[name] = defaults
+      fields_hash[name] = preprocess_field_defaults(name, defaults)
 
       self
     end
@@ -98,6 +100,14 @@ module SortParam
       Formatters::Formatter.for(mode)
                            .new(self)
                            .format(*fields)
+    end
+
+    def preprocess_field_defaults(field, defaults)
+      rename = defaults[:rename]
+      return defaults unless rename.is_a?(Proc)
+
+      defaults[:rename] = defaults[:rename].call(field)
+      defaults
     end
 
     def non_whitelisted_fields(loaded_fields)

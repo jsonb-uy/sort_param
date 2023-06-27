@@ -31,8 +31,8 @@ RSpec.describe SortParam::Definition do
 
   describe "#field" do
     it "whitelists a sort field and sets its default options" do
-      definition.field(:email, { nulls: :first })
-      definition.field(:first_name, { nulls: :last })
+      definition.field(:email, nulls: :first)
+      definition.field(:first_name, nulls: :last)
       definition.field(:last_name)
 
       expect(definition.fields_hash).to eql(
@@ -58,11 +58,21 @@ RSpec.describe SortParam::Definition do
 
   describe "#field_defaults" do
     it "returns the field's configured default options" do
-      definition.field(:email, { nulls: :first })
+      definition.field(:email, nulls: :first, rename: "eadd")
       definition.field(:last_name)
 
-      expect(definition.field_defaults("email")).to eql(nulls: :first)
+      expect(definition.field_defaults("email")).to eql(nulls: :first, rename: "eadd")
       expect(definition.field_defaults("last_name")).to eql({})
+    end
+
+    context "with Proc :rename option" do
+      it "sets the :rename value to the transformed :name" do
+        definition.field(:email, nulls: :last, rename: ->(name) { "users.#{name}" })
+        definition.field(:last_name, rename: ->(_) { "surname" })
+
+        expect(definition.field_defaults("email")).to eql(nulls: :last, rename: "users.email")
+        expect(definition.field_defaults("last_name")).to eql(rename: "surname")
+      end
     end
   end
 
