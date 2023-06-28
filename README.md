@@ -62,7 +62,7 @@ sort_param = SortParam.define do
 ```
 
 
-OR we can do:
+This is is equivalent to:
 
 ```ruby
 sort_param = SortParam::Definition.new
@@ -130,8 +130,8 @@ Use `#load` method instead:
 
 ```ruby
   sort_param = SortParam.define do
-    field :first_name
-  end
+                 field :first_name
+               end
 
   sort_param.load("+first_name,+last_name", mode: :pg)
   => "first_name asc"
@@ -142,9 +142,9 @@ Set the `:rename` field option to a string value or a Proc to output a different
 
 ```ruby
   sort_param = SortParam.define do
-    field :first_name, rename: 'users.name'
-    field :last_name, rename: ->(col) { "users.#{col}" }
-  end
+                 field :first_name, rename: 'users.name'
+                 field :last_name, rename: ->(col) { "users.#{col}" }
+               end
   
   sort_param.load!("+first_name", mode: :pg)
   => "users.name asc"
@@ -163,7 +163,7 @@ Set the `:rename` field option to a string value or a Proc to output a different
 Use `#fields` instead of `#field`:
 
 ```ruby
-  sort_param = SortParam.define do
+  SortParam.define do
     fields :first_name, :last_name, nulls: :first, rename: ->(col) { "users.#{col}" }
     field :email
   end
